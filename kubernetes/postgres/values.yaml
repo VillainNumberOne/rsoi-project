@@ -1,0 +1,16 @@
+namespace: villainnumberone
+
+svc:
+  port: 5432
+  targetPort: 5432
+
+image: "postgres:14.1"
+
+pg:
+  default:
+    username: postgres
+    password: postgres
+    db: postgres
+  primary:
+    username: program
+    password: test

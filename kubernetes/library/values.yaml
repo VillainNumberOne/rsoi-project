@@ -1,0 +1,23 @@
+# Default values for library_system.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+gateway:
+  service:
+    image: mvgorshkoff/gateway:latest
+    port: 8080
+
+library:
+  service:
+    image: mvgorshkoff/librarysystem:latest
+    port: 8060
+
+rating:
+  service:
+    image: mvgorshkoff/ratingsystem:latest
+    port: 8050
+
+res:
+  service:
+    image: mvgorshkoff/reservationsystem:latest
+    port: 8070
