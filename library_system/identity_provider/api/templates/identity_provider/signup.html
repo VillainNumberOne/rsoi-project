@@ -1,0 +1,30 @@
+<!-- templates/identity_provider/signup.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{% static 'identity_provider/styles.css' %}">
+    <script src="{% static 'identity_provider/signup_script.js' %}" defer></script>
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Sign Up</h1>
+        <form id="signup-form" action="{% url 'signup' %}" method="post">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm_password" required>
+            <p id="password-error" class="error"></p>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p id="signup-error" class="error"></p>
+        <p class="signin-link">Already have an account? <a href="{% url 'signin' %}">Sign in here</a></p>
+    </div>
+</body>
+</html>

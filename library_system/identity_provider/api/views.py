@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse, HttpResponse
 from rest_framework import status
+from django.shortcuts import render, redirect
 
 from api.utils import (
     custom_authenticate, 
@@ -13,8 +14,14 @@ from api.utils import (
 import json
 import re
 
-
 USERNAME_REGEX = r'^[a-zA-Z0-9_]+$'
+FRONTEND_URL = "http://localhost:8010"
+
+def signup_page(request):
+    return render(request, "identity_provider/signup.html")
+
+def signin_page(request):
+    return render(request, "identity_provider/signin.html")
 
 @csrf_exempt
 def signup(request):
