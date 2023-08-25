@@ -9,8 +9,7 @@ import time
 import json
 import requests
 from datetime import datetime
-
-IDENTITY_PROVIDER_URL = "http://localhost:8000/api/v1/.well-known/jwks.json"
+from django.conf import settings
 
 def custom_authenticate(username, password):
     password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
@@ -162,7 +161,7 @@ def generate_refresh_token(user):
     return refresh_token
 
 def get_public_key():
-    jwks_url = IDENTITY_PROVIDER_URL
+    jwks_url = settings.IDENTITY_PROVIDER_JWK
     jwks_response = requests.get(jwks_url)
     jwks_data = jwks_response.json()
 

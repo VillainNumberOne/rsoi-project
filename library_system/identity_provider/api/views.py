@@ -15,7 +15,6 @@ import json
 import re
 
 USERNAME_REGEX = r'^[a-zA-Z0-9_]+$'
-FRONTEND_URL = "http://localhost:8010"
 
 def signup_page(request):
     return render(request, "identity_provider/signup.html")
@@ -113,3 +112,4 @@ def validate_id_token(request):
             return JsonResponse({'error': 'Invalid ID token'}, status=401)
 
     return JsonResponse({'error': 'Bad request'}, status=400)
+

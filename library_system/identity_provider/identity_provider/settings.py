@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+IDENTITY_PROVIDER_JWK = "http://localhost:8000/.well-known/jwks.json"
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +30,8 @@ SECRET_KEY = "django-insecure-krtw1#v9!0a&a(*v_k-866xsryq=&s#$v*s_tpqk=vd&1*i82e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "identityprovider"]
+# ALLOWED_HOSTS = ["localhost", "0.0.0.0", "identityprovider"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

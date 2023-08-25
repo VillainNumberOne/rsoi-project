@@ -24,7 +24,7 @@ h3 {
 
 h1 {
     text-align: center;
-    color: #17936f;
+    color: #931784;
 }
 
 label, input {
@@ -37,7 +37,7 @@ button {
     display: block;
     margin-top: 20px; 
     padding: 10px 15px;
-    background-color: #17936f;
+    background-color: #931784;
     color: #ffffff;
     border: none;
     border-radius: 3px;
@@ -66,4 +66,26 @@ button {
 
 .error {
     color: #c40000;
+}
+
+.header {
+    background-color: #931784;
+    color: #ffffff;
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.header-title {
+    color: #ffffff;
+    font-size: 24px;
+    margin: 0;
 }

@@ -1,4 +1,4 @@
-const frontendUrl = "http://localhost:8010/"
+const frontendUrl = "http://localhost:8010/authorize/"
 
 document.addEventListener('DOMContentLoaded', () => {
     const signinForm = document.getElementById('signin-form');

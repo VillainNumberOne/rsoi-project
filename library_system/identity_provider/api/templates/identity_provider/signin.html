@@ -9,6 +9,7 @@
     <script src="{% static 'identity_provider/signin_script.js' %}" defer></script>
 </head>
 <body>
+    {% include 'identity_provider/header.html' %}
     <div class="signin-container">
         <h1>Sign In</h1>
         <form id='signin-form' action="{% url 'signin' %}" method="POST">

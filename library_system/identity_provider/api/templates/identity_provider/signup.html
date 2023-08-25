@@ -1,4 +1,3 @@
-<!-- templates/identity_provider/signup.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +9,7 @@
     <script src="{% static 'identity_provider/signup_script.js' %}" defer></script>
 </head>
 <body>
+    {% include 'identity_provider/header.html' %}
     <div class="signup-container">
         <h1>Sign Up</h1>
         <form id="signup-form" action="{% url 'signup' %}" method="post">
