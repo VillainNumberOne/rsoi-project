@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Library System</title>
+    <link rel="stylesheet" href="{% static 'frontend/styles.css' %}">
+</head>
+<body>
+    {% include 'frontend/header.html' %}
+
+    <div class="welcome-box">
+        <h2>Welcome to the Library System</h2>
+        <p>Your gateway to a world of knowledge</p>
+        <a href="http://localhost:8000/signin" class="cta-button">Login / Signup</a>
+    </div>
+
+    <script>
+        function checkCookie(cookieName) {
+            return document.cookie.split(';').some(function(item) {
+                return item.trim().startsWith(cookieName + '=');
+            });
+        }
+    
+        if (checkCookie('id_token') && checkCookie('refresh_token')) {
+            window.location.href = "{% url 'profile' %}";
+        }
+    </script>
+</body>
+</html>

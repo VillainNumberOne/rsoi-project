@@ -1,0 +1,19 @@
+{% load static %}
+<div class="header">
+    <div class="header-container">
+        <a href="#" class="header-title"><b>Library System</b></a>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Enter city name">
+            <button class="search-button" id="search-button">Search</button>
+        </div>
+        <div class="logout-container">
+            <a class="user-profile" href="{% url 'profile' %}">
+                <button class="avatar" id="avatar-placeholder">U</button>
+                <span id="header-username">Username</span>
+                <span id="star-count" class="golden">0</span>
+            </a>
+            <a href="#" class="logout-button" id="logout-button">Log Out</a>
+        </div>
+    </div>
+</div>
+

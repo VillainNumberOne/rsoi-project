@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rented Books</title>
+    <link rel="stylesheet" href="{% static 'frontend/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'frontend/modal_styles.css' %}">
+</head>
+
+<body>
+    {% include 'frontend/header_authorized.html' %}
+
+    <!-- <div class="book-box">
+        <div class="book-info">
+            <h3 class="book-title">Book Title</h3>
+            <p class="book-author">Author</p>
+            <p class="book-genre">Genre</p>
+            <p class="library-name">Library Name</p>
+            <p class="library-address">Library Address, Library City</p>
+        </div>
+        <div class="book-status">
+            <p class="status-value">Status Value</p>
+            <t class="date-value">Start Date:</>
+            <p class="date-value">Till Date:</p>
+            <button class="return-button">Return</button>
+        </div>
+    </div> -->
+
+    <script src="{% static 'frontend/utils.js' %}"></script>
+    <center>
+        <h1 id="rented-books-title">Rented Books</h1>
+    </center>
+    <div id="book-container" class="book-container"></div>
+
+    <center>
+        <h1 id="returned-books-title">Returned Books</h1>
+    </center>
+    <div id="history-book-container" class="history-book-container"></div>
+
+    <!-- <dialog id="return-dialog">
+        <p id="dialog-book-title" class="book-title">Book Title</p>
+        <p id="dialog-book-author"></p>
+        <label for="book-condition">Book condition</label>
+        <select id="book-condition" class="condition-select">
+            <option value="excellent">Excellent</option>
+            <option value="good">Good</option>
+            <option value="bad">Bad</option>
+        </select>
+        <br>
+        <button id="return-button" class="rent-button">Return</button>
+        <button id="cancel-button" class="cancel-button">Cancel</button>
+    </dialog> -->
+
+    <dialog id="return-result-dialog">
+        <p id="return-result"></p>
+        <button id="close-button" class="rent-button">Close</button>
+    </dialog>
+
+    <script>
+        initHeader(document, "{% url 'index' %}", "{% url 'libraries' %}")
+        initProfile(document);
+    </script>
+</body>
+
+</html>

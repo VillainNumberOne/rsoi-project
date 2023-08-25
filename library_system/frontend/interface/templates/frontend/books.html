@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Books</title>
+    <link rel="stylesheet" href="{% static 'frontend/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'frontend/modal_styles.css' %}">
+</head>
+
+<body>
+    {% include 'frontend/header_authorized.html' %}
+
+    <script src="{% static 'frontend/utils.js' %}"></script>
+    <center>
+        <h1 id="library-name-heading">Library_Name</h1>
+    </center>
+    <center>
+        <p>Available Books</p>
+    </center>
+
+    <div id="book-container" class="book-container"></div>
+
+    <!-- <dialog id="rent-dialog">
+        <p id="dialog-book-title" class="book-title">Book Title</p>
+        <p id="dialog-book-author"></p>
+        <button id="rent-button" class="rent-button">Rent</button>
+        <button id="cancel-button" class="cancel-button">Cancel</button>
+    </dialog> -->
+
+    <dialog id="rent-result-dialog">
+        <p id="rent-result"></p>
+        <button id="close-button" class="rent-button">Close</button>
+    </dialog>
+
+    <script>
+        initHeader(document, "{% url 'index' %}", "{% url 'libraries' %}");
+        initBooks(document);
+    </script>
+</body>
+
+</html>
