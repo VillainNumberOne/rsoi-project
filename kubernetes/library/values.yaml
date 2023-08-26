@@ -21,3 +21,13 @@ res:
   service:
     image: mvgorshkoff/reservationsystem:latest
     port: 8070
+
+idp:
+  service:
+    image: mvgorshkoff/identityprovider:latest
+    port: 8000
+
+front:
+  service:
+    image: mvgorshkoff/frontend:latest
+    port: 8010
