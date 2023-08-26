@@ -9,6 +9,13 @@ spec:
     - host: villainnumberone.cloud.okteto.net
       http:
         paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: front-service
+                port:
+                  number: 8010
           - path: /api/v1/
             pathType: Prefix
             backend:
@@ -16,3 +23,10 @@ spec:
                 name: gateway-service
                 port:
                   number: 8080
+          - path: /idp/
+            pathType: Prefix
+            backend:
+              service:
+                name: idp-service
+                port:
+                  number: 8000
