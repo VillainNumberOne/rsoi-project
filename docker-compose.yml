@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: postgres
     volumes:
-      - db-data:/var/lib/postgresql/data
+      # - db-data:/var/lib/postgresql/data
       - ./postgres/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
@@ -41,6 +41,107 @@ services:
       - zookeeper
 
 # TODO добавить сервисы
+
+  identityprovider:
+    build:
+      dockerfile: Dockerfile
+      context: library_system/identity_provider/
+    volumes:
+      - ./library_system/identity_provider/api/:/code/api/
+      - ./library_system/identity_provider/static/:/code/static/
+      - ./library_system/identity_provider/identity_provider/:/code/identity_provider/
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - services_network 
+
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: library_system/frontend/
+    volumes:
+      - ./library_system/frontend/interface/:/code/interface/
+      - ./library_system/frontend/static/:/code/static/
+      - ./library_system/frontend/frontend/:/code/frontend/
+    ports:
+      - "8010:8010"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - services_network 
+
+
+  librarysystem:
+    build:
+      dockerfile: Dockerfile
+      context: library_system/library_system/
+    ports:
+      - "8060:8060"
+    volumes:
+      - ./library_system/library_system/api/:/code/api/
+      - ./library_system/library_system/library_system/:/code/library_system/
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - services_network
+
+  ratingsystem:
+    build:
+      dockerfile: Dockerfile
+      context: library_system/rating_system/
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./library_system/rating_system/api/:/code/api/
+      - ./library_system/rating_system/rating_system/:/code/rating_system/
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - services_network
+
+  reservationsystem:
+    build:
+      dockerfile: Dockerfile
+      context: library_system/reservation_system/
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./library_system/reservation_system/api/:/code/api/
+      - ./library_system/reservation_system/reservation_system/:/code/reservation_system/
+    depends_on:
+      postgres:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - services_network
+
+  gateway:
+    build:
+      dockerfile: Dockerfile
+      context: library_system/gateway/
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./library_system/gateway/api/:/code/api/
+      - ./library_system/gateway/gateway/:/code/gateway/
+    depends_on:
+      - librarysystem
+      - reservationsystem
+      - ratingsystem
+    networks:
+      - services_network
 
 volumes:
   db-data:
