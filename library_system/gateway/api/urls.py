@@ -8,5 +8,5 @@ urlpatterns = [
     re_path(r'^api/v1/reservations$', views.reservations),
     re_path(r'^api/v1/reservations/(?P<reservation_uid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/return$', views.return_book),
     re_path(r'^api/v1/rating$', views.rating),
-    re_path(r'^api/v1/callback$', views.callback)
+    re_path(r'^api/v1/test_auth$', views.test_auth)
 ]

@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-krtw1#v9!0a&a(*v_k-866xsryq=&s#$v*s_tpqk=vd&1*i82e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "librarysystem"]
 
 
 # Application definition
@@ -83,7 +83,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "libraries",
         "USER": "postgres",
-        "HOST": "postgres-service",
+        "HOST": "postgres",
         "PORT": 5432,
         "PASSWORD": "postgres"
     }

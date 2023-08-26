@@ -4,33 +4,36 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse, HttpResponse
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-from api.models import  Rating
-from api.serializers import  RatingSerializer
+from api.models import Rating
+from api.serializers import RatingSerializer
 from api.messages import *
-import api.utils.utils as utils
 
 
 @csrf_exempt
 def rating_system_api(request, username=None):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
-    print(username, flush=True)
     if request.method == "GET":
         if username is None:
-            ratings =  Rating.objects.all()
-            ratings_serializer =  RatingSerializer(ratings, many=True)
-            return JsonResponse(ratings_serializer.data, safe=False, status=status.HTTP_200_OK)
+            ratings = Rating.objects.all()
+            ratings_serializer = RatingSerializer(ratings, many=True)
+            return JsonResponse(
+                ratings_serializer.data, safe=False, status=status.HTTP_200_OK
+            )
         else:
             try:
-                person =  Rating.objects.get(username=username)
-                person_serializer =  RatingSerializer(person)
-                print(person_serializer.data['stars'], flush=True)
-                return JsonResponse(person_serializer.data['stars'], safe=False, status=status.HTTP_200_OK)
-            except  Rating.DoesNotExist:
+                person = Rating.objects.get(username=username)
+                person_serializer = RatingSerializer(person)
+                return JsonResponse(
+                    person_serializer.data["stars"],
+                    safe=False,
+                    status=status.HTTP_200_OK,
+                )
+            except Rating.DoesNotExist:
                 return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    elif request.method=='PATCH':
+    elif request.method == "PATCH":
         try:
             update_data = JSONParser().parse(request)
         except:
@@ -40,7 +43,6 @@ def rating_system_api(request, username=None):
             person = Rating.objects.get(username=username)
         except Rating.DoesNotExist:
             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
 
         if {"mode", "amount"} <= update_data.keys():
             mode = int(update_data["mode"])
@@ -62,5 +64,18 @@ def rating_system_api(request, username=None):
                 return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-            
+        
+    elif request.method == "POST":
+        data = JSONParser().parse(request)
+        serializer = RatingSerializer(data=data)
+
+        if serializer.is_valid():
+            try:
+                serializer.save()
+            except Exception:
+                 return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(status=status.HTTP_201_CREATED)
+
+        return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
     return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

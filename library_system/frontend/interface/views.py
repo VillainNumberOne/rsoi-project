@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 import json
 from django.views.decorators.csrf import csrf_exempt
+import requests
+from django.conf import settings
 
 def index(request):
     return render(request, 'frontend/index.html')
@@ -22,9 +24,12 @@ def authorize(request):
         refresh_token = request.POST.get('refresh_token', None)
 
         if id_token and refresh_token:
-            response = HttpResponseRedirect('/profile/')
-            response.set_cookie('id_token', id_token, path='/')
-            response.set_cookie('refresh_token', refresh_token, path='/')
-            return response
+            try:
+                response = HttpResponseRedirect('/profile/')
+                response.set_cookie('id_token', id_token, path='/')
+                response.set_cookie('refresh_token', refresh_token, path='/')
+                return response
+            except ValueError:
+                return HttpResponseRedirect('/')
 
     return HttpResponseRedirect('/')

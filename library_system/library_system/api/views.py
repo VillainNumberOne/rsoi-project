@@ -11,15 +11,12 @@ from api.messages import *
 
 
 from django.db import connection
-import api.utils.utils as utils
 import api.queries as q
 import json
 
 
 @csrf_exempt
 def libraries(request):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "GET":
         try:
             data = JSONParser().parse(request)
@@ -79,8 +76,6 @@ def libraries(request):
 
 
 def librarybooks(request):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "GET":
         try:
             data = JSONParser().parse(request)
@@ -120,8 +115,6 @@ def librarybooks(request):
 
 @csrf_exempt
 def library_info(request):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "GET":
         try:
             data = JSONParser().parse(request)
@@ -149,8 +142,6 @@ def library_info(request):
 
 @csrf_exempt
 def book_info(request):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "GET":
         try:
             data = JSONParser().parse(request)
@@ -178,8 +169,6 @@ def book_info(request):
 
 @csrf_exempt
 def book_available_count(request):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "GET":
         try:
             data = JSONParser().parse(request)
@@ -234,8 +223,6 @@ def book_available_count(request):
 
 @csrf_exempt
 def return_book(request):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "PATCH":
         try:
             data = JSONParser().parse(request)

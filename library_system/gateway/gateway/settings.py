@@ -14,6 +14,10 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+IDENTITY_PROVIDER_JWK = "http://identityprovider:8000/.well-known/jwks.json"
+IDENTITY_PROVIDER_URL = "http://identityprovider:8000"
+FRONTEND_URL = "http://frontend:8010"
+GATEWAY_URL = "http://gateway:8080"
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,8 +29,9 @@ SECRET_KEY = "django-insecure-krtw1#v9!0a&a(*v_k-866xsryq=&s#$v*s_tpqk=vd&1*i82e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
-
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", FRONTEND_URL, IDENTITY_PROVIDER_URL, GATEWAY_URL]
+CORS_ALLOWED_ORIGINS = [FRONTEND_URL, IDENTITY_PROVIDER_URL]
+CORS_ALLOW_HEADERS = ["*"]
 
 # Application definition
 

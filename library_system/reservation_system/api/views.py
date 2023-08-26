@@ -9,13 +9,10 @@ from api.models import Reservation
 from api.serializers import ReservationSerializer
 from api.messages import *
 import api.queries as q
-import api.utils.utils as utils
 
 
 @csrf_exempt
 def get_user_reservations(request, username=None):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "GET":
         if username is not None:
             persons = Reservation.objects.filter(username=username).all()
@@ -26,8 +23,6 @@ def get_user_reservations(request, username=None):
 
 @csrf_exempt
 def get_rented(request, username=None):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "GET":
         if username is not None:
             try:
@@ -40,8 +35,6 @@ def get_rented(request, username=None):
 
 @csrf_exempt
 def reservation(request):
-    if not utils.verify(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
     if request.method == "POST":
         try:
             data = JSONParser().parse(request)

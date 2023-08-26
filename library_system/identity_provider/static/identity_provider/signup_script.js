@@ -1,4 +1,5 @@
-const frontendUrl = "http://localhost:8010/authorize/"
+const frontendUrl = "http://localhost:8010/authorize/";
+const gatewayUrl = "http://localhost:8080/";
 
 document.addEventListener('DOMContentLoaded', () => {
     const passwordInput = document.getElementById('password');
@@ -59,9 +60,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(jsonData),
             });
 
-            if (response.status === 201) {
-                const responseBody = await response.json();
+            const responseBody = await response.json();
 
+            const ratingResponse = await fetch(gatewayUrl + "api/v1/rating", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-Name': formData.get('username'),
+                    'X-Id-Token': responseBody.id_token
+                },
+                body: JSON.stringify({
+                    "username": formData.get('username'),
+                    "stars": 75
+                }),
+            });
+
+            if ((response.status === 201) && (ratingResponse.status == 201)) {
                 const form = document.createElement('form');
                 form.method = 'post';
                 form.action = frontendUrl;
@@ -77,6 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 refreshTokenInput.name = 'refresh_token';
                 refreshTokenInput.value = responseBody.refresh_token;
                 form.appendChild(refreshTokenInput);
+
+                const usernameInput = document.createElement('input');
+                usernameInput.type = 'hidden';
+                usernameInput.name = 'username';
+                usernameInput.value = jsonData.username;
+                form.appendChild(usernameInput);
 
                 document.body.appendChild(form);
                 form.submit();
