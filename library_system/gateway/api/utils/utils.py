@@ -1,4 +1,21 @@
 import re
+from confluent_kafka import Producer
+
+producer_config = {
+    'bootstrap.servers': 'kafka1:19091',
+    'message.timeout.ms': 1000
+}
+topic = "Gateway"
+producer = Producer(producer_config)
+
+def send_message(username, message):
+    headers = [("username", username.encode("utf-8"))]
+    producer.produce(
+        topic, key="-", 
+        value=message.encode("utf-8"), 
+        headers=headers
+    )
+    producer.flush()
 
 
 def get_http_headers(request):
@@ -67,7 +84,7 @@ def validate_jwt_signature(jwt):
 
     return payload
 
-def authorize_request(request):
+def authorize_request(request, admin=False):
     headers = get_http_headers(request)
 
     id_token = headers.get('X_ID_TOKEN', None)
@@ -78,6 +95,8 @@ def authorize_request(request):
 
     try:
         jwt_payload = validate_jwt_signature(id_token)
+        if admin and jwt_payload['role'] == 0:
+            return False
         if username is not None:
             return jwt_payload['username'] == username
         else:

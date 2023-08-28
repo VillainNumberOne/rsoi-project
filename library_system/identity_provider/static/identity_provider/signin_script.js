@@ -56,6 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 refreshTokenInput.value = responseBody.refresh_token;
                 form.appendChild(refreshTokenInput);
 
+                const usernameInput = document.createElement('input');
+                usernameInput.type = 'hidden';
+                usernameInput.name = 'username';
+                usernameInput.value = jsonData.username;
+                form.appendChild(usernameInput);
+
                 document.body.appendChild(form);
                 form.submit();
             } else {

@@ -13,6 +13,7 @@ from api.messages import *
 from django.db import connection
 import api.queries as q
 import json
+import api.utils
 
 
 @csrf_exempt
@@ -204,7 +205,15 @@ def book_available_count(request):
 
             if mode == "0":  # decrease
                 result = q.change_available_count(library_uid, book_uid, 0)
+                api.utils.send_message(
+                    "-", 
+                    f"Number of books (uid: {book_uid}) in library (uid: {library_uid}) decreased by 1"
+                )
             elif mode == "1":  # increase
+                api.utils.send_message(
+                    "-", 
+                    f"Number of books (uid: {book_uid}) in library (uid: {library_uid}) increased by 1"
+                )
                 result = q.change_available_count(library_uid, book_uid, 1)
             else:
                 return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

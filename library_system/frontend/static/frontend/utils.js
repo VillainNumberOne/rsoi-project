@@ -203,7 +203,7 @@ function dynamicBooks(books, document, bookContainer, idToken, username) {
         dialogBookAuthor.textContent = "by " + book.book.author;
         returnDialog.showModal();
       });
-      
+
       bookStatus.appendChild(returnButton);
     }
 
@@ -378,14 +378,21 @@ async function initHeader(document, index_url, libraries_url) {
   const idToken = getCookie('id_token');
   const validationResponse = await validateToken(idToken);
   const username = validationResponse.payload.username;
+  const role = validationResponse.payload.role;
 
   if ('error' in validationResponse) {
     deleteCookie('id_token');
     deleteCookie('refresh_token');
     window.location.href = index_url;
-  } else {
+  }
+  else {
     const usernameElement = document.getElementById('header-username');
-    usernameElement.textContent = username + " | ";
+    if (role === 1) {
+      usernameElement.textContent = "Admin " + username + " | ";
+    }
+    else {
+      usernameElement.textContent = username + " | ";
+    }
 
     const avatarPlaceholder = document.getElementById('avatar-placeholder');
     avatarPlaceholder.textContent = username[0]
@@ -397,11 +404,16 @@ async function initHeader(document, index_url, libraries_url) {
   }
 }
 
-async function initProfile(document) {
+async function initProfile(document, adminProfileUrl) {
 
   const idToken = getCookie('id_token');
   const validationResponse = await validateToken(idToken);
   const username = validationResponse.payload.username;
+  const role = validationResponse.payload.role;
+
+  if (role === 1) {
+    window.location.href = adminProfileUrl;
+  }
 
   const bookContainer = document.getElementById("book-container");
   const historyContainer = document.getElementById("history-book-container");
@@ -462,7 +474,93 @@ async function initBooks(document) {
   dynamicLibraryBooks(books, document, bookContainer, libraryUid, idToken, username)
 }
 
+// #############################  ADMIN   ################################
+
+async function initAdminProfile(document, profileUrl) {
+
+  const idToken = getCookie('id_token');
+  const validationResponse = await validateToken(idToken);
+  const username = validationResponse.payload.username;
+  const role = validationResponse.payload.role;
+
+  if (role === 0) {
+    window.location.href = profileUrl;
+  }
+
+  const bookContainer = document.getElementById("book-container");
+  const historyContainer = document.getElementById("history-book-container");
+
+  books = await fetchUserReservations(idToken, username);
+  const rentedBooks = books.filter(book => book.status === "RENTED");
+  const notRentedBooks = books.filter(book => book.status !== "RENTED");
+  rentedBooks.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+  notRentedBooks.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+  dynamicBooks(rentedBooks, document, bookContainer, idToken, username);
+  dynamicBooks(notRentedBooks, document, historyContainer, idToken, username);
+
+  const rentedBooksTitle = document.getElementById("rented-books-title");
+  rentedBooksTitle.textContent = "Rented Books (" + rentedBooks.length + ")"
+  const returnedBooksTitle = document.getElementById("returned-books-title");
+  returnedBooksTitle.textContent = "Returned Books (" + notRentedBooks.length + ")"
+}
+
+async function initStats(document, profileUrl) {
+  const idToken = getCookie('id_token');
+  const validationResponse = await validateToken(idToken);
+  const username = validationResponse.payload.username;
+  const role = validationResponse.payload.role;
+
+  if (role !== 1) {
+    window.location.href = profileUrl
+  }
+
+  const data = await fetchStatistics(idToken, username);
+  data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  const table = document.createElement("table");
+  const tableContainer = document.getElementById('table-container')
+  table.classList.add("data-table");
+  tableContainer.appendChild(table);
+
+  const headerRow = document.createElement("tr");
+  headerRow.innerHTML = "<th>ID</th><th>Service</th><th>Description</th><th>Username</th><th>Timestamp</th>";
+  table.appendChild(headerRow);
+
+  data.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${item.id}</td><td>${item.topic}</td><td>${item.message_value}</td><td>${item.username}</td><td>${item.timestamp}</td>`;
+    table.appendChild(row);
+  });
+}
+
+
 // ############################# REQUESTS ################################
+
+function fetchStatistics(idToken, username) {
+  const apiUrl = new URL('/api/v1/stats', gatewayUrl);
+
+  return fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'X-User-Name': username,
+      'X-Id-Token': idToken,
+    },
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+      throw error;
+    });
+}
 
 function returnBook(idToken, username, reservationUid, condition) {
   const apiUrl = new URL('/api/v1/reservations', gatewayUrl);

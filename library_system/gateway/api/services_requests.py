@@ -5,6 +5,7 @@ from datetime import datetime
 LIBRARY_SYSTEM = "http://librarysystem:8060"
 RATING_SYSTEM = "http://ratingsystem:8050"
 RESERVATION_SYSTEM = "http://reservationsystem:8070"
+STATISTICS_SYSTEM = "http://stats:8020"
 
 
 def get_city_libraries(city, page=None, size=None):
@@ -14,6 +15,11 @@ def get_city_libraries(city, page=None, size=None):
     ).text
     return json.loads(response)
 
+def get_statistics():
+    response = requests.get(
+        f"{STATISTICS_SYSTEM}/api/v1/stats"
+    ).text
+    return json.loads(response)
 
 def get_library_books(library_uid, page=None, size=None, show_all=None):
     data = {

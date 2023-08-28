@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from api.models import Rating
 from api.serializers import RatingSerializer
 from api.messages import *
+import api.utils
 
 
 @csrf_exempt
@@ -57,6 +58,9 @@ def rating_system_api(request, username=None):
                 person_serializer = RatingSerializer(person, data=updated_person)
                 if person_serializer.is_valid():
                     person_serializer.save()
+                    api.utils.send_message(
+                        updated_person['username'], 
+                        f"{updated_person['username']}'s rating updated: {updated_person['stars']}")
                     return HttpResponse(status=status.HTTP_202_ACCEPTED)
                 else:
                     return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

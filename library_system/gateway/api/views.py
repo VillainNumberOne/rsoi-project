@@ -19,6 +19,20 @@ def test_auth(request):
     return JsonResponse({"result": utils.authorize_request(request)}, status=200)
 
 @csrf_exempt
+def statistics(request):
+    if not utils.authorize_request(request, admin=True):
+        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+    
+    if request.method == "GET":
+        try:
+            data = api.services_requests.get_statistics()
+            return JsonResponse(data=data, status=status.HTTP_200_OK, safe=False)
+        except Exception as ex:
+            return JsonResponse(data={"error": str(ex)}, status=status.HTTP_404_NOT_FOUND)
+
+    return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
 def libraries(request, library_uid=None):
     if not utils.authorize_request(request):
         return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
@@ -118,6 +132,7 @@ def reservations(request):
             return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if result is not None:
+            utils.send_message(username, f"{username} made a reservation, book uid: {book_uid}")
             return JsonResponse(result, safe=False, status=status.HTTP_200_OK)
         else:
             return JsonResponse(
@@ -166,6 +181,7 @@ def return_book(request, reservation_uid=None):
             return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if result:
+            utils.send_message(username, f"{username} returned book with reservation uid: {reservation_uid}")
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
         else:
             if error == 404:

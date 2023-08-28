@@ -4,3 +4,4 @@ requests==2.25.1
 django-cors-headers
 pyjwt
 cryptography
+confluent-kafka

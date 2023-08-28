@@ -43,12 +43,13 @@ def signup(request):
             id_token = generate_id_token(new_user)
             refresh_token = generate_refresh_token(new_user)
 
-            tokens = {
+            body = {
                 'id_token': id_token,
-                'refresh_token': refresh_token
+                'refresh_token': refresh_token,
+                'username': username
             }
 
-            return JsonResponse(tokens, status=201)
+            return JsonResponse(body, status=201)
 
     return JsonResponse({'error': 'Bad request'}, status=400)
 
@@ -69,12 +70,13 @@ def login(request):
         id_token = generate_id_token(user)
         refresh_token = generate_refresh_token(user)
 
-        tokens = {
+        body = {
             'id_token': id_token,
-            'refresh_token': refresh_token
+            'refresh_token': refresh_token,
+            'username': username
         }
 
-        return JsonResponse(tokens, status=200)
+        return JsonResponse(body, status=200)
 
     return JsonResponse({'error': 'Bad request'}, status=400)
 

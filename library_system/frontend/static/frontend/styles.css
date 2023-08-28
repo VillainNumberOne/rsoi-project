@@ -285,3 +285,51 @@ body h1 {
 .library-box:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.regular-button {
+    padding: 8px 16px;
+    background-color: #17936f;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.regular-button:hover {
+    background-color: #136c53;
+}
+
+#table-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* border: 1px solid #ddd; */
+}
+
+.data-table th {
+    background-color: #17936f;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+    /* border: 1px solid #ddd; */
+}
+
+.data-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+.data-table tbody tr:hover {
+    background-color: #e0e0e0;
+}

@@ -3,3 +3,4 @@ djangorestframework==3.14.0
 requests==2.25.1
 django-cors-headers
 confluent-kafka
+psycopg2

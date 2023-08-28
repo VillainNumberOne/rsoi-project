@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satistics</title>
+    <link rel="stylesheet" href="{% static 'frontend/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'frontend/modal_styles.css' %}">
+</head>
+
+<body>
+    {% include 'frontend/header_authorized.html' %}
+
+    <script src="{% static 'frontend/utils.js' %}"></script>
+    <center>
+        <h1>Statistics</h1>
+    </center>
+    <div id="table-container"></div>
+
+    <script>
+        initHeader(document, "{% url 'index' %}", "{% url 'libraries' %}");
+        initStats(document, "{% url 'profile' %}");
+    </script>
+</body>
+
+</html>
