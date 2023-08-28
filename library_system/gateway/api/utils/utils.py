@@ -97,10 +97,8 @@ def authorize_request(request, admin=False):
         jwt_payload = validate_jwt_signature(id_token)
         if admin and jwt_payload['role'] == 0:
             return False
-        if username is not None:
-            return jwt_payload['username'] == username
         else:
-            return True
+            return jwt_payload
     except Exception as ex:
         return False
 

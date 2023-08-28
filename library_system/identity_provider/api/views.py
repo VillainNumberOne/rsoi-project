@@ -115,3 +115,29 @@ def validate_id_token(request):
 
     return JsonResponse({'error': 'Bad request'}, status=400)
 
+@csrf_exempt
+def new_user(request):
+    if request.method == "POST":
+        body = json.loads(request.body)
+        id_token = body.get('id_token', None)
+        username = body.get('username', None)
+        password = body.get('password', None)
+
+        if id_token and username and password:
+            try:
+                jwt_payload = validate_jwt_signature(id_token)
+                if jwt_payload['role'] != 1:
+                    return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+                
+                new_user = create_new_user(username, password)
+                if new_user is None:
+                    return JsonResponse({'error': 'Username already exists'}, status=409)
+                else:
+                    return HttpResponse(status=status.HTTP_201_CREATED)
+
+            except ValueError:
+                return JsonResponse({'error': 'Token has expired'}, status=401)
+            except Exception as e:
+                return JsonResponse({'error': 'Invalid ID token' + str(e)}, status=401)
+
+    return JsonResponse({'error': 'Bad request'}, status=400)

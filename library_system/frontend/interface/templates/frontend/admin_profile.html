@@ -12,52 +12,40 @@
 
 <body>
     {% include 'frontend/header_authorized.html' %}
-
-    <!-- <div class="book-box">
-        <div class="book-info">
-            <h3 class="book-title">Book Title</h3>
-            <p class="book-author">Author</p>
-            <p class="book-genre">Genre</p>
-            <p class="library-name">Library Name</p>
-            <p class="library-address">Library Address, Library City</p>
-        </div>
-        <div class="book-status">
-            <p class="status-value">Status Value</p>
-            <t class="date-value">Start Date:</>
-            <p class="date-value">Till Date:</p>
-            <button class="return-button">Return</button>
-        </div>
-    </div> -->
-
     <script src="{% static 'frontend/utils.js' %}"></script>
 
-    
     <center>
         <h1></h1>
         <a href="{% url 'stats' %}"><button class="regular-button">Statistics</button></a>
-        <button class="regular-button">Create User</button>
+        <button class="regular-button" id="create-user-button">Create User</button>
         <h1 id="rented-books-title">Rented Books</h1>
         <div id="book-container" class="book-container"></div>
         <h1 id="returned-books-title">Returned Books</h1>
         <div id="history-book-container" class="history-book-container"></div>
     </center>
 
-    <!-- <dialog id="return-dialog">
-        <p id="dialog-book-title" class="book-title">Book Title</p>
-        <p id="dialog-book-author"></p>
-        <label for="book-condition">Book condition</label>
-        <select id="book-condition" class="condition-select">
-            <option value="excellent">Excellent</option>
-            <option value="good">Good</option>
-            <option value="bad">Bad</option>
-        </select>
-        <br>
-        <button id="return-button" class="rent-button">Return</button>
-        <button id="cancel-button" class="cancel-button">Cancel</button>
-    </dialog> -->
+    <dialog id="create-user-dialog">
+        <p id="dialog-title" class="book-title">Create a New User</p>
 
-    <dialog id="return-result-dialog">
-        <p id="return-result"></p>
+        <label for="new-username">Username:</label>
+        <input type="text" id="new-username" class="input-field" placeholder="Enter username" required>
+        <br>
+
+        <label for="new-password">Password:</label>
+        <input type="password" id="new-password" class="input-field" placeholder="Enter password" required>
+        <br>
+
+        <label for="new-stars">Stars:</label>
+        <input type="number" id="new-stars" class="input-field" placeholder="Enter stars" min="0" max="100" required>
+        <br>
+
+        <button id="submit-button" class="rent-button">Create User</button>
+        <button id="cancel-button" class="cancel-button">Cancel</button>
+    </dialog>
+
+
+    <dialog id="create-result-dialog">
+        <p id="create-result-message"></p>
         <button id="close-button" class="rent-button">Close</button>
     </dialog>
 

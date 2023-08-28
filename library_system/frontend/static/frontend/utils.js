@@ -487,6 +487,65 @@ async function initAdminProfile(document, profileUrl) {
     window.location.href = profileUrl;
   }
 
+  // CREATE USER
+
+  const createUserDialog = document.getElementById("create-user-dialog");
+  const createResultDialog = document.getElementById("create-result-dialog");
+  const createUserButton = document.getElementById("create-user-button");
+  const cancelButton = document.getElementById("cancel-button");
+  const closeButton = document.getElementById("close-button");
+  const submitButton = document.getElementById("submit-button");
+
+  createUserButton.addEventListener("click", () => {
+    createUserDialog.showModal();
+  });
+
+  submitButton.addEventListener("click", () => {
+    const newUsername = document.getElementById("new-username").value;
+    const newPassword = document.getElementById("new-password").value;
+    const newStars = document.getElementById("new-stars").value;
+    const resultMessage = document.getElementById("create-result-message");
+
+    createUserDialog.close();
+    createResultDialog.showModal();
+
+    createUser(idToken, newUsername, newPassword)
+      .then(response => {
+        if (response.ok) {
+          createRating(idToken, username, newUsername, newStars)
+          .then(response => {
+            if (response.ok) {
+              resultMessage.textContent = "Created user " + newUsername + "!"
+            }
+            else {
+              resultMessage.textContent = "Unable to create user"
+            }
+          })
+          .catch(error => {
+            console.error('Fetch error:', error);
+            resultMessage.textContent = "Unable to create user"
+          });
+        }
+        else {
+          resultMessage.textContent = "Unable to create user"
+        }
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+        resultMessage.textContent = "Unable to create user"
+      });
+  });
+
+  cancelButton.addEventListener("click", () => {
+    createUserDialog.close();
+  });
+
+  closeButton.addEventListener("click", () => {
+    createResultDialog.close();
+  });
+
+
+  // BOOKS
   const bookContainer = document.getElementById("book-container");
   const historyContainer = document.getElementById("history-book-container");
 
@@ -536,6 +595,43 @@ async function initStats(document, profileUrl) {
 
 
 // ############################# REQUESTS ################################
+
+function createUser(idToken, username, password) {
+  const apiUrl = new URL('/api/v1/new_user', identityProviderUrl);
+
+  body = {
+    "id_token": idToken,
+    "username": username,
+    "password": password
+  }
+
+  return fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body),
+  })
+}
+
+function createRating(idToken, username, newUsername, stars) {
+  const apiUrl = new URL('/api/v1/rating', gatewayUrl);
+
+  body = {
+    "username": newUsername,
+    "stars": stars
+  }
+
+  return fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-User-Name': username,
+      'X-Id-Token': idToken
+    },
+    body: JSON.stringify(body),
+  })
+}
 
 function fetchStatistics(idToken, username) {
   const apiUrl = new URL('/api/v1/stats', gatewayUrl);

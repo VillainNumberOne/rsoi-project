@@ -55,3 +55,19 @@ dialog p {
     border-color: #898989;
     box-shadow: 0 0 4px rgba(148, 148, 148, 0.3);
 }
+
+.input-field {
+    width: 150px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #17936f;
+    box-shadow: 0 0 4px rgba(23, 147, 111, 0.3);
+}

@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     re_path(r'^api/v1/signup$', views.signup),
+    re_path(r'^api/v1/new_user$', views.new_user),
     re_path(r'^api/v1/login$', views.login),
     re_path(r'^api/v1/validate$', views.validate_id_token),
     re_path(r'^api/v1/refresh$', views.refresh),

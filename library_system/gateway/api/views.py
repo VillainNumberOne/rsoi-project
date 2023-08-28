@@ -202,10 +202,10 @@ def return_book(request, reservation_uid=None):
 
 @csrf_exempt
 def rating(request):
-    if not utils.authorize_request(request):
-        return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
-    
     if request.method == "GET":
+        if not utils.authorize_request(request):
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+    
         headers = utils.get_http_headers(request)
         if "X_USER_NAME" in headers.keys():
             username = headers["X_USER_NAME"]
@@ -224,6 +224,10 @@ def rating(request):
                 return HttpResponse(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     if request.method == "POST":
+        jwt_payload = utils.authorize_request(request, admin=True) 
+        if not jwt_payload:
+            return HttpResponse(status=status.HTTP_401_UNAUTHORIZED)
+        
         body = json.loads(request.body)
         username = body.get("username", None)
         stars = body.get("stars", 0)
@@ -232,8 +236,12 @@ def rating(request):
             try:
                 response_status = api.services_requests.create_rating(username, stars)
                 if response_status == 201:
+                    utils.send_message(
+                        "Admin" + jwt_payload['username'], 
+                        f"Admin {jwt_payload['username']} created a user with username: {username}, stars: {stars}"
+                    )
                     return HttpResponse(status=status.HTTP_201_CREATED)
-            except Exception:
+            except Exception as ex:
                 return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
     return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
