@@ -6,3 +6,4 @@ psql -U postgres -d libraries -a -f /docker-entrypoint-initdb.d/init/library_sys
 psql -U postgres -d libraries -a -f /docker-entrypoint-initdb.d/init/library_system_inserts.sql
 psql -U postgres -d identity -a -f /docker-entrypoint-initdb.d/init/identity_provider.sql
 psql -U postgres -d identity -a -f /docker-entrypoint-initdb.d/init/identity_provider_inserts.sql
+psql -U postgres -d stats -a -f /docker-entrypoint-initdb.d/init/stats.sql

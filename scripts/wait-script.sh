@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 IFS="," read -ra PORTS <<<"$WAIT_PORTS"
-path=$(dirname "$0")
 
 PIDs=()
 for port in "${PORTS[@]}"; do

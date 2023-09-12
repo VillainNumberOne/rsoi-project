@@ -1,71 +1,71 @@
 version: "3"
 services:
-  postgres:
-    image: library/postgres:13
-    container_name: postgres
-    restart: on-failure
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: postgres
-    volumes:
-      # - db-data:/var/lib/postgresql/data
-      - ./postgres/:/docker-entrypoint-initdb.d/
-    ports:
-      - "5432:5432"
-    networks:
-      - services_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # postgres:
+    # image: library/postgres:13
+    # container_name: postgres
+    # restart: on-failure
+    # environment:
+    #   POSTGRES_USER: postgres
+    #   POSTGRES_PASSWORD: "postgres"
+    #   POSTGRES_DB: postgres
+    # volumes:
+    #   # - db-data:/var/lib/postgresql/data
+    #   - ./postgres/:/docker-entrypoint-initdb.d/
+    # ports:
+    #   - "5432:5432"
+    # networks:
+    #   - services_network
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U postgres"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
 
-  zookeeper:
-    image: zookeeper:3.4.9
-    hostname: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_PORT: 2181
-      ZOO_SERVERS: server.1=zookeeper:2888:3888
-    volumes:
-      - ./data/zookeeper/data:/data
-      - ./data/zookeeper/datalog:/datalog
-    networks:
-      - services_network 
+  # zookeeper:
+  #   image: zookeeper:3.4.9
+  #   hostname: zookeeper
+  #   ports:
+  #     - "2181:2181"
+  #   environment:
+  #     ZOO_MY_ID: 1
+  #     ZOO_PORT: 2181
+  #     ZOO_SERVERS: server.1=zookeeper:2888:3888
+  #   volumes:
+  #     - ./data/zookeeper/data:/data
+  #     - ./data/zookeeper/datalog:/datalog
+  #   networks:
+  #     - services_network 
   
-  kafka1:
-    image: confluentinc/cp-kafka:5.3.0
-    hostname: kafka1
-    ports:
-      - "9091:9091"
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19091,LISTENER_DOCKER_EXTERNAL://localhost:9091
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_BROKER_ID: 1
-    volumes:
-      - ./data/kafka1/data:/var/lib/kafka/data
-    depends_on:
-      - zookeeper
-    networks:
-      - services_network 
+  # kafka1:
+  #   image: confluentinc/cp-kafka:5.3.0
+  #   hostname: kafka1
+  #   ports:
+  #     - "9091:9091"
+  #   environment:
+  #     KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19091,LISTENER_DOCKER_EXTERNAL://localhost:9091
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+  #     KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_BROKER_ID: 1
+  #   volumes:
+  #     - ./data/kafka1/data:/var/lib/kafka/data
+  #   depends_on:
+  #     - zookeeper
+  #   networks:
+  #     - services_network 
 
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    restart: "no"
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: "kafka1:19091"
-    depends_on:
-      - kafka1
-    networks:
-      - services_network 
+  # kafdrop:
+  #   image: obsidiandynamics/kafdrop
+  #   restart: "no"
+  #   ports:
+  #     - "9000:9000"
+  #   environment:
+  #     KAFKA_BROKERCONNECT: "kafka1:19091"
+  #   depends_on:
+  #     - kafka1
+  #   networks:
+  #     - services_network 
 
   stats:
     build:
@@ -85,106 +85,106 @@ services:
     networks:
       - services_network 
 
-  identityprovider:
-    build:
-      dockerfile: Dockerfile
-      context: library_system/identity_provider/
-    volumes:
-      - ./library_system/identity_provider/api/:/code/api/
-      - ./library_system/identity_provider/static/:/code/static/
-      - ./library_system/identity_provider/identity_provider/:/code/identity_provider/
-    ports:
-      - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - services_network 
+  # identityprovider:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: library_system/identity_provider/
+  #   volumes:
+  #     - ./library_system/identity_provider/api/:/code/api/
+  #     - ./library_system/identity_provider/static/:/code/static/
+  #     - ./library_system/identity_provider/identity_provider/:/code/identity_provider/
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   networks:
+  #     - services_network 
 
-  frontend:
-    build:
-      dockerfile: Dockerfile
-      context: library_system/frontend/
-    volumes:
-      - ./library_system/frontend/interface/:/code/interface/
-      - ./library_system/frontend/static/:/code/static/
-      - ./library_system/frontend/frontend/:/code/frontend/
-    ports:
-      - "8010:8010"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - services_network 
+  # frontend:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: library_system/frontend/
+  #   volumes:
+  #     - ./library_system/frontend/interface/:/code/interface/
+  #     - ./library_system/frontend/static/:/code/static/
+  #     - ./library_system/frontend/frontend/:/code/frontend/
+  #   ports:
+  #     - "8010:8010"
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   networks:
+  #     - services_network 
 
 
-  librarysystem:
-    build:
-      dockerfile: Dockerfile
-      context: library_system/library_system/
-    ports:
-      - "8060:8060"
-    volumes:
-      - ./library_system/library_system/api/:/code/api/
-      - ./library_system/library_system/library_system/:/code/library_system/
-    depends_on:
-      postgres:
-        condition: service_healthy
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - services_network
+  # librarysystem:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: library_system/library_system/
+  #   ports:
+  #     - "8060:8060"
+  #   volumes:
+  #     - ./library_system/library_system/api/:/code/api/
+  #     - ./library_system/library_system/library_system/:/code/library_system/
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   networks:
+  #     - services_network
 
-  ratingsystem:
-    build:
-      dockerfile: Dockerfile
-      context: library_system/rating_system/
-    ports:
-      - "8050:8050"
-    volumes:
-      - ./library_system/rating_system/api/:/code/api/
-      - ./library_system/rating_system/rating_system/:/code/rating_system/
-    depends_on:
-      postgres:
-        condition: service_healthy
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - services_network
+  # ratingsystem:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: library_system/rating_system/
+  #   ports:
+  #     - "8050:8050"
+  #   volumes:
+  #     - ./library_system/rating_system/api/:/code/api/
+  #     - ./library_system/rating_system/rating_system/:/code/rating_system/
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   networks:
+  #     - services_network
 
-  reservationsystem:
-    build:
-      dockerfile: Dockerfile
-      context: library_system/reservation_system/
-    ports:
-      - "8070:8070"
-    volumes:
-      - ./library_system/reservation_system/api/:/code/api/
-      - ./library_system/reservation_system/reservation_system/:/code/reservation_system/
-    depends_on:
-      postgres:
-        condition: service_healthy
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - services_network
+  # reservationsystem:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: library_system/reservation_system/
+  #   ports:
+  #     - "8070:8070"
+  #   volumes:
+  #     - ./library_system/reservation_system/api/:/code/api/
+  #     - ./library_system/reservation_system/reservation_system/:/code/reservation_system/
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   networks:
+  #     - services_network
 
-  gateway:
-    build:
-      dockerfile: Dockerfile
-      context: library_system/gateway/
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./library_system/gateway/api/:/code/api/
-      - ./library_system/gateway/gateway/:/code/gateway/
-    depends_on:
-      - librarysystem
-      - reservationsystem
-      - ratingsystem
-    networks:
-      - services_network
+  # gateway:
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: library_system/gateway/
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./library_system/gateway/api/:/code/api/
+  #     - ./library_system/gateway/gateway/:/code/gateway/
+  #   depends_on:
+  #     - librarysystem
+  #     - reservationsystem
+  #     - ratingsystem
+  #   networks:
+  #     - services_network
 
 networks: 
   services_network:
